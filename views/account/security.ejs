@@ -1,0 +1,117 @@
+<%- include("../inc/head", { title: 'Account Security', include_css: 'profile' }) %>
+
+<body>
+    <%- include("../inc/topbar.ejs") %>
+
+    <!-- Content -->
+    <div class="container-xxl flex-grow-1 container-p-y">
+        <h4 class="fw-bold py-3 mb-4">
+            <span class="text-muted fw-light">My Account /</span> Security
+        </h4>
+        <!-- Header -->
+        <div class="row">
+            <div class="col-12">
+                <div class="card mb-4">
+                    <div class="user-profile-header-banner">
+                        <img src="../../assets/img/pages/profile-banner.png" alt="Banner image" class="rounded-top">
+                    </div>
+                    <div class="user-profile-header d-flex flex-column flex-sm-row text-sm-start text-center mb-4">
+                        <div class="flex-shrink-0 mt-n2 mx-sm-0 mx-auto">
+                            <img src="<%= user.avatar %>" alt="user image" class="d-block h-auto ms-0 ms-sm-4 rounded user-profile-img">
+                        </div>
+                        <div class="flex-grow-1 mt-3 mt-sm-5">
+                            <div class="d-flex align-items-md-end align-items-sm-start align-items-center justify-content-md-between justify-content-start mx-4 flex-md-row flex-column gap-4">
+                                <div class="user-profile-info">
+                                    <h4><%= user.firstName %> <%= user.lastName %></h4>
+                                    <ul class="list-inline mb-0 d-flex align-items-center flex-wrap justify-content-sm-start justify-content-center gap-2">
+                                        <li class="list-inline-item">
+                                            <i class='ti ti-user'></i> <%= user.username %>
+                                        </li>
+                                        <li class="list-inline-item">
+                                            <i class='ti ti-map-pin'></i> <%= user.country %>
+                                        </li>
+                                        <li class="list-inline-item">
+                                            <i class='ti ti-calendar'></i> Joined <%= new Date(user.createdAt).toDateString() %></li>
+                                    </ul>
+                                </div>
+                                <a href="#" class="btn btn-primary">
+                                    <i class='ti ti-user-check me-1'></i> Email Verified
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!--/ Header -->
+
+        <!-- Navbar pills -->
+        <div class="row">
+            <div class="col-md-12">
+                <ul class="nav nav-pills flex-column flex-sm-row mb-4">
+                    <li class="nav-item"><a class="nav-link" href="/account"><i class='ti-xs ti ti-user-check me-1'></i> Profile</a></li>
+                    <li class="nav-item"><a class="nav-link active" href="/account/security"><i class='ti-xs ti ti-lock me-1'></i> Security</a></li>
+                    <li class="nav-item"><a class="nav-link" href="/account/connections"><i class='ti-xs ti ti-link me-1'></i> Connections</a></li>
+                    <li class="nav-item"><a class="nav-link" href="/account/developers"><i class='ti-xs ti ti-code me-1'></i> Developers</a></li>
+                </ul>
+            </div>
+        </div>
+        <!--/ Navbar pills -->
+
+        <!-- User Profile Content -->
+        <div class="row">
+            <div class="card mb-4">
+                <h5 class="card-header">Account Security</h5>
+                <!-- Account -->
+                <div class="card-body">
+                    <div class="card-body">
+                        <form id="formAccountSettings" onsubmit="return false">
+                            <div class="row">
+                                <div class="mb-3 col-md-6">
+                                    <label for="firstName" class="form-label">First Name</label>
+                                    <input class="form-control" type="text" id="firstName" name="firstName" value="<%= user.firstName %>" autofocus />
+                                </div>
+                                <div class="mb-3 col-md-6">
+                                    <label for="lastName" class="form-label">Last Name</label>
+                                    <input class="form-control" type="text" name="lastName" id="lastName" value="<%= user.lastName %>" />
+                                </div>
+                                <div class="mb-3 col-md-6">
+                                    <label for="email" class="form-label">E-mail</label>
+                                    <input class="form-control" type="text" id="email" name="email" value="<%= user.email %>"/>
+                                </div>
+                                <div class="mb-3 col-md-6">
+                                    <label class="form-label" for="phoneNumber">Phone Number</label>
+                                    <div class="input-group input-group-merge">
+                                        <input type="text" id="phoneNumber" name="phoneNumber" class="form-control" placeholder="202 555 0111" />
+                                    </div>
+                                </div>
+                                <div class="mb-3 col-md-6">
+                                    <label for="country" class="form-label">Country</label>
+                                    <input class="form-control" type="text" id="country" name="country" value="<%= user.country %>"/>
+                                </div>
+                                <div class="mb-3 col-md-6">
+                                    <label for="language" class="form-label">Preferred Language</label>
+                                    <select id="language" class="select2 form-select">
+                                        <option value="">Select Language</option>
+                                        <option value="en">English</option>
+                                        <option value="fr">French</option>
+                                        <option value="de">German</option>
+                                        <option value="pt">Portuguese</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="mt-2">
+                                <button type="submit" class="btn btn-primary me-2">Save changes</button>
+                                <button type="reset" class="btn btn-label-secondary">Cancel</button>
+                            </div>
+                        </form>
+                    </div>
+                    <!-- /Account -->
+                </div>
+            </div>
+        </div>
+    </div>
+    <!--/ Content -->
+
+    <%- include("../inc/scripts.ejs") %>
+</body>

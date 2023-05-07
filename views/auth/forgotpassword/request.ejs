@@ -1,0 +1,151 @@
+<%- include("../../inc/head", { title: 'Login', include_css: 'auth' }) %>
+
+<body id="body">
+    <div class="authentication-wrapper authentication-basic px-4">
+        <div class="authentication-inner py-4">
+            <div class="card">
+                <div class="card-body">
+                    <div class="app-brand justify-content-center mb-4 mt-2">
+                        <a class="app-brand-link gap-2">
+                            <span class="app-brand-text demo text-body fw-bold ms-1">Forgot your Affinity password?</span>
+                        </a>
+                    </div>
+                    <div id="alert_div">
+                        <div class="alert alert-danger d-flex align-items-center" role="alert">
+                            <span id="alert_icon" class="alert-icon text-danger me-2"></span>
+                            <div id="alert_text"></div>
+                        </div>
+                    </div>
+                    <div id="request">
+                        <p class="mb-4">Enter your email and we'll send you instructions to reset your password.</p>
+                        <form id="formAuthentication" class="mb-3">
+                            <div class="mb-3">
+                                <label for="email" class="form-label">Email</label>
+                                <input type="text" class="form-control" id="email" name="email" placeholder="Enter your email" autofocus>
+                            </div>
+                            <button class="btn btn-primary d-grid w-100" id="btn-reset">Send Reset Link</button>
+                        </form>
+                        <div class="text-center">
+                            <a href="/login?s=<%= session.id %>" class="d-flex align-items-center justify-content-center">
+                                <i class="ti ti-chevron-left scaleX-n1-rtl"></i>
+                                Back to login
+                            </a>
+                        </div>
+                    </div>
+                    <div id="success">
+                        <p class="mb-4">
+                            A password reset email has been sent to <strong><span id="email_success"></span></strong>.<br />
+                            Please be sure to check your spam folder.
+                        </p>
+                        <div class="text-center">
+                            <a href="/login?s=<%= session.id %>" class="d-flex align-items-center justify-content-center">
+                                <i class="ti ti-chevron-left scaleX-n1-rtl"></i>
+                                Back to login
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <%- include("../../inc/scripts") %>
+    <script>
+        // on page load
+        $(() => {
+            $('#success').hide();
+
+            $('#alert_div').hide();
+            $('#alert_text').text('');
+        });
+
+        $('#btn-reset').click((e) => {
+            e.preventDefault();
+
+            var email = $('#email').val();
+
+            $('#icon').remove();
+            $('#alert_div').hide();
+            $('#alert_text').text('');
+
+            $.ajax({
+                url: '/api/resetpassword',
+                type: 'POST',
+                data: {
+                    email: email,
+                    session: '<%= session.id %>'
+                },
+
+                success: (data) => {
+                    if (data.error) {
+                        if (data.error == 'Invalid session') window.location.replace('/error?ecode=NO_SESSION,LOGIN,<%= session.id %>');
+
+                        if (data.error.toLowerCase().includes('missing')) $('<i id="icon" class="ti ti-user ti-xs"></i>').prependTo('#alert_icon');
+                        if (data.error.toLowerCase().includes('not found')) $('<i id="icon" class="ti ti-x ti-xs"></i>').prependTo('#alert_icon');
+
+                        $('#alert_text').text(data.error);
+                        $('#alert_div').show();
+
+                        unblocked = true;
+                        $('#body').unblock();
+                        // <i class="ti ti-key ti-xs"></i>
+                        /* <div class="alert alert-danger d-flex align-items-center" role="alert">
+                            <span class="alert-icon text-danger me-2"></span>
+                            <div id="alert_text"></div>
+                        </div> */
+                    } else {
+                        unblocked = true;
+                        $('#body').unblock();
+                        $('#request').hide();
+                        $('#success').show();
+                        $('#email_success').text(email);
+                    }
+                }
+            })
+
+            let unblocked;
+            $('#body').block({
+                message: '<div class="spinner-border text-primary" role="status"></div>',
+                timeout: 5000,
+                css: {
+                    backgroundColor: "transparent",
+                    border: "0"
+                },
+                overlayCSS: {
+                    backgroundColor: "#000",
+                    opacity: 0.5
+                },
+                onUnblock: () => {
+                    if (unblocked) return;
+                    $('#body').block({
+                        message: '<div class="spinner-border text-warning" role="status"></div><br /><br />This is taking longer than usual...',
+                        timeout: 10000,
+                        css: {
+                            backgroundColor: "transparent",
+                            border: "0"
+                        },
+                        overlayCSS: {
+                            backgroundColor: "#000",
+                            opacity: 0.5
+                        },
+                        onUnblock: () => {
+                            if (unblocked) return;
+                            $('#body').block({
+                                message: '<div class="spinner-border text-danger" role="status"></div><br /><br />This is taking longer than usual...<br /><a href="/r/help?r=verify_time&s=<%= session.id %>">Get Help</a>',
+                                css: {
+                                    backgroundColor: "transparent",
+                                    border: "0"
+                                },
+                                overlayCSS: {
+                                    backgroundColor: "#000",
+                                    opacity: 0.5
+                                },
+                            });
+                        }
+                    });
+                }
+            });
+        });
+    </script>
+</body>
+</html>

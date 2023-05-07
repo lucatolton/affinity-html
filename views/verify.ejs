@@ -1,0 +1,106 @@
+<%- include("./inc/head", { title: 'Verify', include_css: 'auth' }) %>
+
+<body id="body">
+    <div class="authentication-wrapper authentication-basic px-4">
+        <div class="authentication-inner py-4">
+            <div class="card">
+                <div class="card-body">
+                    <!-- Logo -->
+                    <div class="app-brand justify-content-center mb-4 mt-2">
+                        <a href="index-2.html" class="app-brand-link gap-2">
+                            <span class="app-brand-text demo text-body fw-bold ms-1">Affinity</span>
+                        </a>
+                    </div>
+                    <!-- /Logo -->
+                    <h4 class="mb-1 pt-2">Login to <%= application.details.name %></h4>
+                    <p class="text-start mb-4">
+                        By granting them access, they can:<br /><br />
+                        <% scopes.forEach((scope) => { %>
+                            <i class="ti ti-check mb-2"></i> <%= scope.description %><br />
+                        <% }); %><br />
+                        Once you click <strong>Authenticate</strong>, you will be redirected to <strong id="url"><%= application.settings.allowed_redirects[0] %></strong>
+                    </p>
+                    <button class="btn btn-primary w-100 mb-3" id="btn-grant">
+                        Authenticate
+                    </button>
+                    <p class="text-center mb-0">Logged in as <strong><%= user.username %></strong> |
+                        <a href="/changeuser?s=<%= session.id %>">
+                            Change user
+                        </a>
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <%- include("./inc/scripts") %>
+    <script>
+        var redirect = document.getElementById("url").innerHTML;
+        var domain = new URL(redirect);
+        document.getElementById("url").innerHTML = `${domain.protocol}//${domain.hostname}`;
+
+        $('#btn-grant').click((e) => {
+            e.preventDefault();
+
+            $.ajax({
+                url: '/api/verify',
+                type: 'POST',
+                data: {
+                    session: '<%= session.id %>'
+                },
+
+                success: (data) => {
+                    if (data.error) {
+                        if (data.error == 'Invalid session') window.location.replace('/error?ecode=NO_SESSION_APP,<%= session.id %>');
+                        else window.location.replace('/error?ecode=GENERIC,' + data.error);
+                    } else {
+                        console.log(data);
+                        if (data.redirect_url) window.location.replace(data.redirect_url);
+                        else window.location.replace('/error?ecode=GENERIC,' + data);
+                    }
+                }
+            })
+
+            $('#body').block({
+                message: '<div class="spinner-border text-primary" role="status"></div>',
+                timeout: 5000,
+                css: {
+                    backgroundColor: "transparent",
+                    border: "0"
+                },
+                overlayCSS: {
+                    backgroundColor: "#000",
+                    opacity: 0.5
+                },
+                onUnblock: () => {
+                    $('#body').block({
+                        message: '<div class="spinner-border text-warning" role="status"></div><br /><br />This is taking longer than usual...',
+                        timeout: 10000,
+                        css: {
+                            backgroundColor: "transparent",
+                            border: "0"
+                        },
+                        overlayCSS: {
+                            backgroundColor: "#000",
+                            opacity: 0.5
+                        },
+                        onUnblock: () => {
+                            $('#body').block({
+                                message: '<div class="spinner-border text-danger" role="status"></div><br /><br />This is taking longer than usual...<br /><a href="/r/help?r=verify_time&s=<%= session.id %>">Get Help</a>',
+                                css: {
+                                    backgroundColor: "transparent",
+                                    border: "0"
+                                },
+                                overlayCSS: {
+                                    backgroundColor: "#000",
+                                    opacity: 0.5
+                                },
+                            });
+                        }
+                    });
+                }
+            });
+        });
+    </script>
+</body>
+</html>

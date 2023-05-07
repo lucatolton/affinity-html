@@ -1,0 +1,48 @@
+{
+    "errors": {
+
+    },
+
+    "generic": {
+        "app_name": "Affinity"
+    },
+
+    "pages": {
+        "index": {
+            "_page_title": "Welcome",
+
+            "description": {
+                "l1": "Affinity is the new way to login to your favourite websites.",
+                "l2": "With easy developer integration, a simple user interface, and a secure backend, Affinity is the perfect solution for your next project."
+            },
+            "my_account": "My Account",
+            "docs": "Developer Documentation"
+        },
+
+        "error": {
+            "_page_title": "Error",
+
+            "title": "%{error.code} - %{error.title}",
+            "description": {
+                "l1": "%{error.detail}",
+                "l2": "If this error persists, please contact support."
+            },
+            "small": {
+                "l1": "Debug Information",
+                "l2": "**Raw:** %{error.raw}"
+            }
+        },
+
+        "verify": {
+            "_page_title": "Authorize %{application.details.name}",
+
+            "description": {
+                "l1": "Hey %{user.username},",
+                "l2": "%{application.details.name} is requesting access to your account."
+            },
+            "small": {
+                "l1": "By granting them access, they can:"
+            }
+        }
+    }
+}

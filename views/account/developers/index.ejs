@@ -1,0 +1,228 @@
+<%- include("../../inc/head", { title: 'Developer Home', include_css: 'profile' }) %>
+
+<body>
+    <div class="layout-wrapper layout-navbar-full layout-horizontal layout-without-menu">
+        <div class="layout-container">
+            <%- include("../../inc/topbar.ejs") %>
+
+            <div class="layout-page">
+                <div class="content-wrapper">
+                    <%- include("../../inc/navbar.ejs") %>
+
+                    <div class="container-xxl flex-grow-1 container-p-y">
+                        <h4 class="fw-bold py-3 mb-4">
+                            <span class="text-muted fw-light">My Account / Developer Area /</span> Home
+                        </h4>
+
+                        <div id="alert_div">
+                            <div class="alert d-flex align-items-center" id="alert_container" role="alert">
+                                <span id="alert_icon" class="alert-icon me-2"></span>
+                                <div id="alert_text"></div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-lg-8 mb-4 col-md-12">
+                                <div class="card">
+                                    <div class="card-header d-flex justify-content-between">
+                                        <h5 class="card-title mb-0">Statistics</h5>
+                                        <small class="text-muted">Updated just now</small>
+                                    </div>
+                                    <div class="card-body pt-2">
+                                        <div class="row gy-3">
+                                            <div class="col-md-3 col-6">
+                                                <div class="d-flex align-items-center">
+                                                    <div class="badge rounded-pill bg-label-primary me-3 p-2"><i class="ti ti-app-window ti-sm"></i></div>
+                                                    <div class="card-info">
+                                                        <h5 class="mb-0" id="applications_count">Loading...</h5>
+                                                        <small>Applications</small>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-3 col-6">
+                                                <div class="d-flex align-items-center">
+                                                    <div class="badge rounded-pill bg-label-info me-3 p-2"><i class="ti ti-users ti-sm"></i></div>
+                                                    <div class="card-info">
+                                                        <h5 class="mb-0" id="users_count">Loading...</h5>
+                                                        <small>Users</small>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-3 col-6">
+                                                <div class="d-flex align-items-center">
+                                                    <div class="badge rounded-pill bg-label-success me-3 p-2"><i class="ti ti-file-invoice ti-sm"></i></div>
+                                                    <div class="card-success">
+                                                        <h5 class="mb-0">2</h5>
+                                                        <small>Active Sessions (now)</small>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-3 col-6">
+                                                <div class="d-flex align-items-center">
+                                                    <div class="badge rounded-pill bg-label-danger me-3 p-2"><i class="ti ti-file-invoice ti-sm"></i></div>
+                                                    <div class="card-danger">
+                                                        <h5 class="mb-0">Free</h5>
+                                                        <small>Current Plan</small>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-lg-2 col-6 mb-4">
+                                <div class="card">
+                                    <div class="card-body text-center">
+                                        <div class="badge rounded-pill p-2 bg-label-info mb-2"><i class="ti ti-user-plus ti-sm"></i></div>
+                                        <h5 class="card-title mb-2">12</h5>
+                                        <small>New Monthly Users</small>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-lg-2 col-6 mb-4">
+                                <div class="card">
+                                    <div class="card-body text-center">
+                                        <div class="badge rounded-pill p-2 bg-label-danger mb-2"><i class="ti ti-heart ti-sm"></i></div>
+                                        <h5 class="card-title mb-2">100%</h5>
+                                        <small>User Satisfaction</small>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+
+                        <div class="row">
+                            <div class="col-xl-4 col-lg-5 col-md-5">
+                                <div class="card mb-4">
+                                    <div class="card-body">
+                                        <p class="card-text text-uppercase">Developer Overview</p>
+                                        <ul class="list-unstyled mb-0">
+                                            <li class="d-flex align-items-center mb-3"><i class="ti ti-check"></i><span class="fw-bold mx-2">Account in good standing:</span> <span>Yes</span></li>
+                                            <li class="d-flex align-items-center mb-3"><i class="ti ti-layout-grid"></i><span class="fw-bold mx-2">Applications:</span> <span id="applications_count">Loading...</span></li>
+                                            <li class="d-flex align-items-center"><i class="ti ti-users"></i><span class="fw-bold mx-2">Active Users:</span> <span id="users_count">Loading...</span></li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-xl-8 col-lg-7 col-md-7">
+                                <div class="card mb-4" id="applications_card">
+                                    <h5 class="card-header">
+                                        Your Applications
+                                    </h5>
+                                    <div class="card-body">
+                                        <!-- cards for applications -->
+                                        <div class="row mb-5" id="applications_row">
+                                            Loading...
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="modal fade" id="newApplicationModal" tabindex="-1" aria-hidden="true">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="exampleModalLabel1">Create an Application</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                            <!-- <div class="row">
+                                <div class="col mb-3">
+                                    <label for="nameBasic" class="form-label">Name</label>
+                                    <input type="text" id="nameBasic" class="form-control" placeholder="Enter Name">
+                                </div>
+                            </div>
+                            <div class="row g-2">
+                                <div class="col mb-0">
+                                    <label for="emailBasic" class="form-label">Email</label>
+                                    <input type="email" id="emailBasic" class="form-control" placeholder="xxxx@xxx.xx">
+                                </div>
+                                <div class="col mb-0">
+                                    <label for="dobBasic" class="form-label">DOB</label>
+                                    <input type="date" id="dobBasic" class="form-control" placeholder="DD / MM / YY">
+                                </div>
+                            </div> -->
+                            This isn't ready just yet.
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-label-secondary" data-bs-dismiss="modal">Close</button>
+                            <!-- <button type="button" class="btn btn-primary">Save changes</button> -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <%- include("../../inc/scripts.ejs") %>
+            <script>
+                $(() => {
+                    // alert-danger
+                    // text-danger
+                    $('#alert_div').hide();
+                    $('#alert_text').text('');
+
+                    blockCard('#applications_card');
+
+                    $.ajax({
+                        url: '/api/developers/applications',
+                        type: 'GET',
+                        dataType: 'json',
+                        success: (data) => {
+                            let totalUsers = 0;
+                            let html = '';
+                            data.applications.forEach((application) => {
+                                // add card to applications_row
+                                let date = new Date(application.details.createdAt);
+                                html += `<div class="col-md-6 col-lg-4 mb-3">
+                                            <div class="card text-center">
+                                                <div class="card-header">
+                                                    <i class="ti ti-${application.details.icon}"></i>
+                                                </div>
+                                                <div class="card-body">
+                                                    <h5 class="card-title">${application.details.name}</h5>
+                                                    <p class="card-text">${application.details.description}</p>
+                                                    <a href="/account/developers/application/${application._id}" class="btn btn-primary waves-effect waves-light">View</a>
+                                                </div>
+                                                <div class="card-footer text-muted">
+                                                    <small>
+                                                        ${application._id}<br /
+                                                        >Created ${date.getUTCDate()} ${date.toLocaleString('default', { month: 'long' })} ${date.getUTCFullYear()}
+                                                    </small>
+                                                </div>
+                                            </div>
+                                        </div>`;
+                                totalUsers = totalUsers + application.users.length;
+                            });
+                            if (html.length > 0) {
+                                html += `<center>
+                                            <br /><button type="button" class="btn btn-label-success account-image-reset mb-3" data-bs-toggle="modal" data-bs-target="#newApplicationModal">
+                                                <span class="d-none d-sm-block">Create Application</span>
+                                            </button>
+                                        </center>`;
+                                $('#applications_row').html(html);
+                            } else {
+                                html = `<div class="col-12">
+                                            <p class="text-center">There are no applications associated with this Affinity account.</p>
+                                            <center>
+                                                <button type="button" class="btn btn-label-success account-image-reset mb-3" data-bs-toggle="modal" data-bs-target="#newApplicationModal">
+                                                    <span class="d-none d-sm-block">Create Application</span>
+                                                </button>
+                                            </center>
+                                        </div>`;
+                                $('#applications_row').html(html);
+                            }
+
+                            $('[id=applications_count]').text(data.applications.length);
+                            $('[id=users_count]').text(totalUsers);
+                            unblockCard('#applications_card');
+                        }
+                    });
+                });
+            </script>
+        </div>
+    </div>
+</body>

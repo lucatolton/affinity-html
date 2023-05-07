@@ -1,0 +1,106 @@
+<%- include("../inc/head", { title: 'Connected Services', include_css: 'profile' }) %>
+
+<body>
+    <%- include("../inc/topbar.ejs") %>
+
+    <!-- Content -->
+    <div class="container-xxl flex-grow-1 container-p-y">
+        <h4 class="fw-bold py-3 mb-4">
+            <span class="text-muted fw-light">My Account /</span> Connections
+        </h4>
+        <!-- Header -->
+        <div class="row">
+            <div class="col-12">
+                <div class="card mb-4">
+                    <div class="user-profile-header-banner">
+                        <img src="../../assets/img/pages/profile-banner.png" alt="Banner image" class="rounded-top">
+                    </div>
+                    <div class="user-profile-header d-flex flex-column flex-sm-row text-sm-start text-center mb-4">
+                        <div class="flex-shrink-0 mt-n2 mx-sm-0 mx-auto">
+                            <img src="<%= user.avatar %>" alt="user image" class="d-block h-auto ms-0 ms-sm-4 rounded user-profile-img">
+                        </div>
+                        <div class="flex-grow-1 mt-3 mt-sm-5">
+                            <div class="d-flex align-items-md-end align-items-sm-start align-items-center justify-content-md-between justify-content-start mx-4 flex-md-row flex-column gap-4">
+                                <div class="user-profile-info">
+                                    <h4><%= user.firstName %> <%= user.lastName %></h4>
+                                    <ul class="list-inline mb-0 d-flex align-items-center flex-wrap justify-content-sm-start justify-content-center gap-2">
+                                        <li class="list-inline-item">
+                                            <i class='ti ti-user'></i> <%= user.username %>
+                                        </li>
+                                        <li class="list-inline-item">
+                                            <i class='ti ti-map-pin'></i> <%= user.country %>
+                                        </li>
+                                        <li class="list-inline-item">
+                                            <i class='ti ti-calendar'></i> Joined <%= new Date(user.createdAt).toDateString() %></li>
+                                    </ul>
+                                </div>
+                                <a href="#" class="btn btn-primary">
+                                    <i class='ti ti-user-check me-1'></i> Email Verified
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!--/ Header -->
+
+        <!-- Navbar pills -->
+        <div class="row">
+            <div class="col-md-12">
+                <ul class="nav nav-pills flex-column flex-sm-row mb-4">
+                    <li class="nav-item"><a class="nav-link" href="/account"><i class='ti-xs ti ti-user-check me-1'></i> Profile</a></li>
+                    <li class="nav-item"><a class="nav-link" href="/account/security"><i class='ti-xs ti ti-lock me-1'></i> Security</a></li>
+                    <li class="nav-item"><a class="nav-link active" href="/account/connections"><i class='ti-xs ti ti-link me-1'></i> Connections</a></li>
+                    <li class="nav-item"><a class="nav-link" href="/account/developers"><i class='ti-xs ti ti-code me-1'></i> Developers</a></li>
+                </ul>
+            </div>
+        </div>
+        <!--/ Navbar pills -->
+
+        <!-- User Profile Content -->
+        <div class="row">
+            <div class="card mb-4">
+                <h5 class="card-header">Connected Services</h5>
+                <!-- Account -->
+                <div class="card-body">
+                    <div class="row mb-5" id="applications_row">
+                        <div class="col-md-6 col-lg-4 mb-3">
+                            <div class="card text-center">
+                                <div class="card-header">
+                                    <i class="ti ti-brand-github"></i>
+                                </div>
+                                <div class="card-body">
+                                    <h5 class="card-title">GitHub</h5>
+                                    <p class="card-text"><%= user.connections.github.username ? user.connections.github.username : 'No account linked.' %></p>
+                                    <a href="/api/login/github?action=<%= user.connections.github.username ? 'unlink' : 'link' %>" class="btn btn-primary waves-effect waves-light"><%= user.connections.github.username ? 'Unlink' : 'Link' %></a>
+                                </div>
+                                <div class="card-footer text-muted">
+                                    <small><%= user.connections.github.username ? 'User ID: ' + user.connections.github.id : 'Link GitHub to allow faster authentication.' %></small>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6 col-lg-4 mb-3">
+                            <div class="card text-center">
+                                <div class="card-header">
+                                    <i class="ti ti-brand-discord"></i>
+                                </div>
+                                <div class="card-body">
+                                    <h5 class="card-title">Discord</h5>
+                                    <p class="card-text"><%= user.connections.discord.username ? user.connections.discord.username : 'No account linked.' %></p>
+                                    <a href="/api/login/discord?action=<%= user.connections.discord.username ? 'unlink' : 'link' %>" class="btn btn-primary waves-effect waves-light"><%= user.connections.discord.username ? 'Unlink' : 'Link' %></a>
+                                </div>
+                                <div class="card-footer text-muted">
+                                    <small><%= user.connections.discord.username ? 'User ID: ' + user.connections.discord.id : 'Link Discord to allow faster authentication.' %></small>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!--/ Content -->
+
+    <%- include("../inc/scripts.ejs") %>
+</body>

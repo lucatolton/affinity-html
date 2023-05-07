@@ -1,0 +1,250 @@
+<%- include("../inc/head", { title: 'Login', include_css: 'auth' }) %>
+
+<body id="body">
+    <div class="authentication-wrapper authentication-basic px-4">
+        <div class="authentication-inner py-4">
+            <div class="card">
+                <div class="card-body">
+                    <div class="app-brand justify-content-center mb-4 mt-2">
+                        <a class="app-brand-link gap-2">
+                            <span class="app-brand-text demo text-body fw-bold ms-1">Sign up to <%= application.details.name %></span>
+                        </a>
+                    </div>
+                    <div id="alert_div">
+                        <div class="alert alert-danger d-flex align-items-center" role="alert">
+                            <span id="alert_icon" class="alert-icon text-danger me-2"></span>
+                            <div id="alert_text"></div>
+                        </div>
+                    </div>
+                    <form id="formAuthentication" class="mb-3">
+                        <div class="mb-3">
+                            <label for="username" class="form-label">Username</label>
+                            <input type="text" class="form-control" id="username" name="username" placeholder="At least 3 characters" autofocus onKeyUp="updatePlaceholder();">
+                        </div>
+                        <div class="mb-3">
+                            <label for="email" class="form-label">Email</label>
+                            <input type="text" class="form-control" id="email" name="email" placeholder="user@lucat.lol">
+                        </div>
+                        <div class="mb-3 form-password-toggle">
+                            <div class="d-flex justify-content-between">
+                                <label class="form-label" for="password">Password</label>
+                            </div>
+                            <div class="input-group input-group-merge">
+                                <input type="password" id="password" class="form-control" name="password" placeholder="&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;" aria-describedby="password" />
+                                <span class="input-group-text cursor-pointer" onclick="showPassword();"><i class="ti ti-eye-off" id="password_icon"></i></span>
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" id="box-agree-tos">
+                                <label class="form-check-label" for="box-agree-tos">
+                                    I agree to the <a href="/terms?s=<%= session.id %>">Terms &amp; Conditions</a>
+                                </label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" id="box-agree-data">
+                                <label class="form-check-label" for="box-agree-data">
+                                    I agree for my data to be processed and stored
+                                </label>
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <button class="btn btn-primary d-grid w-100" type="submit" id="btn-register">Create Account</button>
+                        </div>
+                    </form>
+
+                    <p class="text-center">
+                        <span>Already got an account?</span>
+                        <a href="/login?s=<%= session.id %>">
+                            <span>Login</span>
+                        </a><br /><br />
+                        <small>
+                            By signing up, you automatically agree for us to store your data, and you agree to our <a href="/terms?s=<%= session.id %>">Terms &amp; Conditions</a><br />
+                            The data we store will be used to authenticate you, and contact you if necessary.
+                            Your email will be used to send you important information, and to verify your account. Therefore, it may be sent to a third-party.
+                        </small>
+                    </p>
+
+                    <!-- <div class="divider my-4">
+                        <div class="divider-text">or</div>
+                    </div>
+
+                    <div class="d-flex justify-content-center">
+                        <a href="javascript:;" class="btn btn-icon btn-label-secondary me-3">
+                            <i class="tf-icons fa-brands fa-github fs-5"></i>
+                        </a>
+
+                        <a href="javascript:;" class="btn btn-icon btn-label-facebook me-3">
+                            <i class="tf-icons fa-brands fa-discord fs-5"></i>
+                        </a>
+                    </div> -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <%- include("../inc/scripts") %>
+    <script>
+        // on page load
+        $(() => {
+            $('#alert_div').hide();
+            $('#alert_text').text('');
+        });
+
+        // show or hide password
+        function showPassword() {
+            var x = document.getElementById("password");
+            if (x.type === "password") {
+                x.type = "text";
+                $('#password_icon').removeClass('ti-eye-off');
+                $('#password_icon').addClass('ti-eye');
+            } else {
+                x.type = "password";
+                $('#password_icon').addClass('ti-eye-off');
+                $('#password_icon').removeClass('ti-eye');
+            }
+        }
+
+        // update email box with example on username change
+        function updatePlaceholder() {
+            let pass = $('#username').val().toLowerCase()
+                .replace('a', '4')
+                .replace('b', '8')
+                .replace('c', '(')
+                .replace('d', 'D')
+                .replace('e', '3')
+                .replace('f', 'F')
+                .replace('g', '9')
+                .replace('h', 'H')
+                .replace('i', '1')
+                .replace('j', 'J')
+                .replace('k', '1<')
+                .replace('l', '1')
+                .replace('m', 'M')
+                .replace('n', 'N')
+                .replace('o', 'oh')
+                .replace('p', '|>')
+                .replace('q', '9')
+                .replace('r', '12')
+                .replace('s', '$')
+                .replace('t', '+')
+                .replace('u', 'U')
+                .replace('v', 'V')
+                .replace('w', '\\/\\/')
+                .replace('x', '><')
+                .replace('y', 'Y')
+                .replace('z', '2')
+                .replace(' ', '_');
+
+            pass = pass.split('').map((v) =>
+                Math.round(Math.random()) ? v.toUpperCase() : v.toLowerCase()
+            ).join('');
+
+            $('#email').attr('placeholder', $('#username').val() ? $('#username').val() + '@lucat.lol' : 'user' + '@lucat.lol');
+            $('#password').attr('placeholder', pass ? pass : 'U53r123!');
+        }
+
+        $('#btn-register').click((e) => {
+            e.preventDefault();
+
+            var username = $('#username').val();
+            var email = $('#email').val();
+            var password = $('#password').val();
+
+            $('#icon').remove();
+
+            // check if both boxes are ticked
+            if (!$('#box-agree-tos').is(':checked') || !$('#box-agree-data').is(':checked')) {
+                $('<i id="icon" class="ti ti-database ti-xs"></i>').prependTo('#alert_icon');
+                $('#alert_text').text('You must agree to the Terms & Conditions and to have your data processed and stored.');
+                $('#alert_div').show();
+                return;
+            }
+
+            $.ajax({
+                url: '/api/register',
+                type: 'POST',
+                data: {
+                    username: username,
+                    email: email,
+                    password: password,
+                    session: '<%= session.id %>'
+                },
+
+                success: (data) => {
+                    if (data.error) {
+                        if (data.error == 'Invalid session') window.location.replace('/error?ecode=NO_SESSION,REGISTER,<%= session.id %>');
+
+                        if (data.error.toLowerCase().includes('username')) $('<i id="icon" class="ti ti-user ti-xs"></i>').prependTo('#alert_icon');
+                        if (data.error.toLowerCase().includes('email')) $('<i id="icon" class="ti ti-mail ti-xs"></i>').prependTo('#alert_icon');
+                        if (data.error.toLowerCase().includes('password')) $('<i id="icon" class="ti ti-key ti-xs"></i>').prependTo('#alert_icon');
+
+                        $('#alert_text').text(data.error);
+                        $('#alert_div').show();
+
+                        unblocked = true;
+                        $('#body').unblock();
+                        // <i class="ti ti-key ti-xs"></i>
+                        /* <div class="alert alert-danger d-flex align-items-center" role="alert">
+                            <span class="alert-icon text-danger me-2"></span>
+                            <div id="alert_text"></div>
+                        </div> */
+                    } else {
+                        if (data.redirect) {
+                            window.location.replace(data.redirect);
+                            trackEvent('Registration', {
+                                'username': username,
+                                'application': '<%= application.details.name %>'
+                            })
+                        }
+                        else window.location.replace('/error?error=' + data.error);
+                    }
+                }
+            })
+
+            let unblocked;
+            $('#body').block({
+                message: '<div class="spinner-border text-primary" role="status"></div>',
+                timeout: 5000,
+                css: {
+                    backgroundColor: "transparent",
+                    border: "0"
+                },
+                overlayCSS: {
+                    backgroundColor: "#000",
+                    opacity: 0.5
+                },
+                onUnblock: () => {
+                    if (unblocked) return;
+                    $('#body').block({
+                        message: '<div class="spinner-border text-warning" role="status"></div><br /><br />This is taking longer than usual...',
+                        timeout: 10000,
+                        css: {
+                            backgroundColor: "transparent",
+                            border: "0"
+                        },
+                        overlayCSS: {
+                            backgroundColor: "#000",
+                            opacity: 0.5
+                        },
+                        onUnblock: () => {
+                            if (unblocked) return;
+                            $('#body').block({
+                                message: '<div class="spinner-border text-danger" role="status"></div><br /><br />This is taking longer than usual...<br /><a href="/r/help?r=verify_time&s=<%= session.id %>">Get Help</a>',
+                                css: {
+                                    backgroundColor: "transparent",
+                                    border: "0"
+                                },
+                                overlayCSS: {
+                                    backgroundColor: "#000",
+                                    opacity: 0.5
+                                },
+                            });
+                        }
+                    });
+                }
+            });
+        });
+    </script>
+</body>
+</html>

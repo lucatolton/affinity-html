@@ -1,0 +1,184 @@
+<%- include("../../../inc/head", { title: application_id, include_css: 'profile' }) %>
+
+<body>
+    <div class="layout-wrapper layout-navbar-full layout-horizontal layout-without-menu">
+        <div class="layout-container">
+            <%- include("../../../inc/topbar.ejs") %>
+
+            <div class="layout-page">
+                <div class="content-wrapper">
+                    <%- include("../../../inc/navbar.ejs") %>
+
+                    <div class="container-xxl flex-grow-1 container-p-y">
+                        <h4 class="fw-bold py-3 mb-4">
+                            <span class="text-muted fw-light">My Account / Developer Area / Applications /</span> <%= application_id %>
+                        </h4>
+
+                        <div id="alert_div">
+                            <div class="alert d-flex align-items-center" id="alert_container" role="alert">
+                                <span id="alert_icon" class="alert-icon me-2"></span>
+                                <div id="alert_text"></div>
+                            </div>
+                        </div>
+
+                        <div class="row" id="stats_links_row">
+                            <div class="col-lg-3 col-6 mb-4">
+                                <div class="card">
+                                    <div class="card-body text-center">
+                                        <div class="badge rounded-pill p-2 bg-label-info mb-2"><i class="ti ti-users ti-sm"></i></div>
+                                        <h5 class="card-title mb-2" id="application_users_count">Loading...</h5>
+                                        <small>Current Users</small>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-lg-3 col-6 mb-4">
+                                <div class="card">
+                                    <div class="card-body text-center">
+                                        <div class="badge rounded-pill p-2 bg-label-info mb-2"><i class="ti ti-key ti-sm"></i></div>
+                                        <h5 class="card-title mb-2" id="application_login_count">Loading...</h5>
+                                        <small>Total Login Count</small>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-lg-3 col-6 mb-4">
+                                <div class="card">
+                                    <div class="card-body text-center">
+                                        <div class="badge rounded-pill p-2 bg-label-danger mb-2"><i class="ti ti-heart ti-sm"></i></div>
+                                        <h5 class="card-title mb-2" id="application_user_satisfaction">100%</h5>
+                                        <small>User Satisfaction</small>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-lg-3 col-6 mb-4">
+                                <div class="card">
+                                    <div class="card-body text-center">
+                                        <div class="badge rounded-pill p-2 bg-label-info mb-2"><i class="ti ti-calendar ti-sm"></i></div>
+                                        <h5 class="card-title mb-2" id="application_creation_date">Loading...</h5>
+                                        <small>Creation Date</small>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+
+                        <div class="row">
+                            <div class="col-xl-4 col-lg-7 col-md-7">
+                                <div class="card mb-4" id="application_secrets_card">
+                                    <h5 class="card-header">
+                                        Application Secrets
+                                    </h5>
+                                    <div class="card-body">
+                                        <!-- cards for applications -->
+                                        <div class="row mb-5" id="application_secrets_row">
+                                            <span>
+                                                <span class="fw-bold">Client ID:</span>
+                                                <span id="application_client_id"></span>
+                                            </span>
+                                            <span>
+                                                <span class="fw-bold">Client Secret:</span> 
+                                                <span id="application_client_secret"></span>
+                                            </span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-xl-8 col-lg-7 col-md-7">
+                                <div class="card mb-4" id="application_users_card">
+                                    <h5 class="card-header">
+                                        Application Users
+                                    </h5>
+                                    <div class="card-body">
+                                        <!-- cards for applications -->
+                                        <div class="row mb-5" id="application_users_card"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <%- include("../../../inc/scripts.ejs") %>
+            <script>
+                let application = null;
+
+                $(() => {
+                    // alert-danger
+                    // text-danger
+                    $('#alert_div').hide();
+                    $('#alert_text').text('');
+
+                    blockCard('#applications_card');
+                    blockCard('#application_secrets_card');
+                    blockCard('#stats_links_row');
+
+                    $.ajax({
+                        url: '/api/developers/applications/<%= application_id %>',
+                        type: 'GET',
+                        dataType: 'json',
+                        success: (data) => {
+                            if (data.error) return window.location.href = '/account/developers';
+
+                            application = data.application;
+
+                            let date = new Date(data.application.details.createdAt);
+
+                            $('#application_users_count').text(data.application.users.length);
+                            $('#application_creation_date').text(`${date.getUTCDate()} ${date.toLocaleString('default', { month: 'long' })} ${date.getUTCFullYear()}`);
+                            unblockCard('#applications_card');
+
+                            $('#application_client_id').text(data.application.keys.client_id);
+                            $('#application_client_secret').html(`<a class="text-danger" onclick="showClientSecret()">Click to Reveal</a>`);
+                            unblockCard('#application_secrets_card');
+
+                            /*html += `<div class="col-md-6 col-lg-4 mb-3">
+                                            <div class="card text-center">
+                                                <div class="card-header">
+                                                    <i class="ti ti-${application.details.icon}"></i>
+                                                </div>
+                                                <div class="card-body">
+                                                    <h5 class="card-title">${application.details.name}</h5>
+                                                    <p class="card-text">${application.details.description}</p>
+                                                    <a href="/account/developers/application/${application._id}" class="btn btn-primary waves-effect waves-light">View</a>
+                                                </div>
+                                                <div class="card-footer text-muted">
+                                                    ${application._id}<br />Created ${date.getUTCDate()} ${date.toLocaleString('default', { month: 'long' })} ${date.getUTCFullYear()}
+                                                </div>
+                                            </div>
+                                        </div>`;*/
+                            //$('[id=applications_count]').text(data.applications.length);
+
+                            console.log(data.application);
+                        }
+                    });
+
+                    $.ajax({
+                        url: '/api/developers/applications/<%= application_id %>/stats',
+                        type: 'GET',
+                        dataType: 'json',
+                        success: (data) => {
+                            if (data.error) return window.location.href = '/account/developers';
+
+                            $('#application_login_count').text(data.stats.login_count);
+
+                            unblockCard('#stats_links_row');
+                        }
+                    })
+                });
+
+                function showClientSecret() {
+                    Swal.fire({
+                        type: 'warning',
+                        title: 'Client Secret',
+                        html: `<code>${application.keys.client_secret}</code>`,
+                        footer: '<span class="text-danger">WARNING! This is a secret code: do not share it with anyone.</span>',
+                        customClass: {
+                            confirmButton: 'btn btn-primary'
+                        },
+                        buttonsStyling: false
+                    });
+                }
+            </script>
+        </div>
+    </div>
+</body>

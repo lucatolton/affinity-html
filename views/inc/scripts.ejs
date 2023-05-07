@@ -1,0 +1,64 @@
+<script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
+<script src="/assets/vendor/libs/popper/popper.js"></script>
+<script src="/assets/vendor/js/bootstrap.js"></script>
+<script src="/assets/vendor/libs/perfect-scrollbar/perfect-scrollbar.js"></script>
+<script src="/assets/vendor/libs/node-waves/node-waves.js"></script>
+
+<script src="/assets/vendor/libs/hammer/hammer.js"></script>
+<script src="/assets/vendor/libs/i18n/i18n.js"></script>
+<script src="/assets/vendor/libs/typeahead-js/typeahead.js"></script>
+
+<script src="/assets/vendor/js/menu.js"></script>
+
+<!-- Required plugins -->
+<script src="/assets/vendor/libs/block-ui/block-ui.js"></script>
+<script src="/assets/vendor/libs/sweetalert2/sweetalert2.js" />
+
+<script>
+    // Replace YOUR_TOKEN with your Project Token
+    mixpanel.init('1099f9a733512f396088e85b7cf57ddc', {debug: true}); 
+
+    // Set this to a unique identifier for the user performing the event.
+    // eg: their ID in your database or their email address.
+    mixpanel.identify("Guest");
+
+    // Ready to track!
+    function trackEvent(event, properties) {
+        mixpanel.track(event, properties);
+    }
+</script>
+
+<!-- Global functions -->
+<script>
+    function blockCard(element = 'body', timeout = null) {
+        $(element).block({
+            message: '<div class="spinner-border text-primary" role="status"></div>',
+            timeout: timeout,
+            css: {
+                backgroundColor: "transparent",
+                border: "0"
+            },
+            overlayCSS: {
+                backgroundColor: "#000",
+                opacity: 0.5
+            },
+        });
+    }
+
+    function unblockCard(element = 'body') {
+        $(element).unblock();
+    }
+
+    function hideElement(element) {
+        $(element).hide();
+    }
+
+    let siteconfig = '<%= JSON.stringify(siteconfig) %>';
+    console.log('<%= siteconfig %>');
+
+    // if url contains "developers", change the title 
+    if (window.location.href.indexOf("developers") > -1) {
+        $('#page_topbar_title').text('Affinity Developers');
+        $('#page_topbar_dev_quicklinks').css('display', 'block');
+    }
+</script>
